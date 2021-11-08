@@ -1,0 +1,27 @@
+name: test-slack
+on: [push]
+jobs:
+  test-slack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read secrets from AWS Secrets Manager into environment variables
+        uses: abhilash1in/aws-secrets-manager-action@v1.1.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          secrets: |
+            prod/*
+          parse-json: true
+      - name: Check if env variable is set after fetching secrets
+        run: if [ -z ${MY_SECRET_1+x} ]; then echo "MY_SECRET_1 is unset" && printenv; else echo "MY_SECRET_1 is set to '$MY_SECRET_1'"; fi
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: devops-debug
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_ICON: https://github.com/weareoneworld.png?size=48
+          SLACK_MESSAGE: 'Post Content :rocket:'
+          SLACK_TITLE: Post Title
+          SLACK_USERNAME: WeAreOneWorld
+          SLACK_WEBHOOK: ${{ env.PROD_SLACK_DEVOPS_DEBUG_WEBHOOK }}
