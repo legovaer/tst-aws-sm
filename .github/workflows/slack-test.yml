@@ -4,8 +4,9 @@ jobs:
   test-slack:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - name: Load AWS Secrets
-        uses: ./.github/actions/load-aws-secrets@v1
+        uses: ./.github/actions/load-aws-secrets
       - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
