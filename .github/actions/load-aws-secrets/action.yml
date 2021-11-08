@@ -1,5 +1,6 @@
 name: load-aws-secrets
-on: workflow_call
+on:
+  workflow_call:
 jobs:
   load-aws-secrets:
     runs-on: ubuntu-latest
