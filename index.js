@@ -1,5 +1,7 @@
-import express from 'express';
-import { collectDefaultMetrics, register } from 'prom-client';
+const express = require('express');
+const pomClient = require('prom-client');
+const collectDefaultMetrics = pomClient.collectDefaultMetrics;
+const register = pomClient.register;
 
 collectDefaultMetrics();
 
