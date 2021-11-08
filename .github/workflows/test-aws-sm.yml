@@ -1,0 +1,19 @@
+name: test-aws-sm
+on: [push]
+jobs:
+  test-aws-sm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Read secrets from AWS Secrets Manager into environment variables
+        uses: abhilash1in/aws-secrets-manager-action@v1.1.0
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          secrets: |
+            dev/test/*
+          parse-json: true
+
+      - name: Check if env variable is set after fetching secrets
+        run: if [ -z ${MY_SECRET_1+x} ]; then echo "MY_SECRET_1 is unset" && printenv; else echo "MY_SECRET_1 is set to '$MY_SECRET_1'"; fi
+
